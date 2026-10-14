@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: foodshare-postgres
+    environment:
+      POSTGRES_DB: foodshare
+      POSTGRES_USER: foodshare
+      POSTGRES_PASSWORD: foodshare
+    ports:
+      - "5433:5432"
+    volumes:
+      - foodshare-pgdata:/var/lib/postgresql/data
+
+volumes:
+  foodshare-pgdata:
