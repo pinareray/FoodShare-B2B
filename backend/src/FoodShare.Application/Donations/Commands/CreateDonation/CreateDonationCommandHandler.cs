@@ -3,6 +3,7 @@ using FoodShare.Application.Common.Interfaces;
 using FoodShare.Application.Donations.Dtos;
 using FoodShare.Application.Donations.Notifications;
 using FoodShare.Domain.Entities;
+using FoodShare.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,11 @@ public sealed class CreateDonationCommandHandler(IApplicationDbContext context, 
             .FirstOrDefaultAsync(o => o.Id == request.OrganizationId, cancellationToken)
             ?? throw new NotFoundException(nameof(Organization), request.OrganizationId);
 
-        var donation = new Donation(request.Title, request.Category, request.Quantity, organization.Id);
+        if (organization.Type != OrganizationType.Donor)
+            throw new ArgumentException("Only donor organizations can create donations.");
+
+        var expiresAt = request.ExpiresAt?.ToUniversalTime();
+        var donation = new Donation(request.Title, request.Category, request.Quantity, organization.Id, expiresAt);
 
         context.Donations.Add(donation);
         await context.SaveChangesAsync(cancellationToken);
@@ -31,7 +36,12 @@ public sealed class CreateDonationCommandHandler(IApplicationDbContext context, 
             donation.Status,
             organization.Id,
             organization.Name,
-            donation.CreatedAt);
+            donation.CreatedAt,
+            donation.ExpiresAt,
+            RecipientOrganizationId: null,
+            RecipientOrganizationName: null,
+            ReservedAt: null,
+            CollectedAt: null);
 
         await publisher.Publish(new DonationCreatedNotification(dto), cancellationToken);
 

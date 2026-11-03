@@ -33,7 +33,13 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
+                    b.Property<DateTime?>("CollectedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("OrganizationId")
@@ -41,6 +47,12 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
+
+                    b.Property<Guid?>("RecipientOrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ReservedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -56,6 +68,8 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("OrganizationId");
 
+                    b.HasIndex("RecipientOrganizationId");
+
                     b.HasIndex("Status");
 
                     b.ToTable("donations", (string)null);
@@ -69,7 +83,7 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
                             OrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a01"),
                             Quantity = 40,
                             Status = "Pending",
-                            Title = "Fresh sourdough bread"
+                            Title = "Taze ekşi maya ekmek"
                         },
                         new
                         {
@@ -79,7 +93,7 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
                             OrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a02"),
                             Quantity = 25,
                             Status = "Pending",
-                            Title = "Seasonal vegetables crate"
+                            Title = "Mevsim sebzeleri kasası"
                         },
                         new
                         {
@@ -88,8 +102,69 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
                             CreatedAt = new DateTime(2026, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc),
                             OrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a02"),
                             Quantity = 60,
+                            RecipientOrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a03"),
+                            ReservedAt = new DateTime(2026, 1, 1, 13, 0, 0, 0, DateTimeKind.Utc),
                             Status = "Reserved",
-                            Title = "Yogurt & cheese assortment"
+                            Title = "Yoğurt ve peynir çeşitleri"
+                        },
+                        new
+                        {
+                            Id = new Guid("8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a04"),
+                            Category = "PreparedMeals",
+                            CollectedAt = new DateTime(2025, 12, 29, 14, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 29, 9, 0, 0, 0, DateTimeKind.Utc),
+                            OrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a04"),
+                            Quantity = 30,
+                            RecipientOrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a05"),
+                            ReservedAt = new DateTime(2025, 12, 29, 11, 0, 0, 0, DateTimeKind.Utc),
+                            Status = "Collected",
+                            Title = "Hazır öğle yemeği paketleri"
+                        },
+                        new
+                        {
+                            Id = new Guid("8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a05"),
+                            Category = "Packaged",
+                            CollectedAt = new DateTime(2025, 12, 27, 14, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 27, 9, 0, 0, 0, DateTimeKind.Utc),
+                            OrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a02"),
+                            Quantity = 120,
+                            RecipientOrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a03"),
+                            ReservedAt = new DateTime(2025, 12, 27, 11, 0, 0, 0, DateTimeKind.Utc),
+                            Status = "Collected",
+                            Title = "Paketli makarna ve pirinç"
+                        },
+                        new
+                        {
+                            Id = new Guid("8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a06"),
+                            Category = "Bakery",
+                            CollectedAt = new DateTime(2025, 12, 30, 14, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 30, 9, 0, 0, 0, DateTimeKind.Utc),
+                            OrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a01"),
+                            Quantity = 45,
+                            RecipientOrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a06"),
+                            ReservedAt = new DateTime(2025, 12, 30, 11, 0, 0, 0, DateTimeKind.Utc),
+                            Status = "Collected",
+                            Title = "Simit ve poğaça"
+                        },
+                        new
+                        {
+                            Id = new Guid("8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a07"),
+                            Category = "Beverages",
+                            CreatedAt = new DateTime(2026, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc),
+                            OrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a02"),
+                            Quantity = 80,
+                            Status = "Pending",
+                            Title = "Meyve suyu kolileri"
+                        },
+                        new
+                        {
+                            Id = new Guid("8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a08"),
+                            Category = "PreparedMeals",
+                            CreatedAt = new DateTime(2025, 12, 31, 9, 0, 0, 0, DateTimeKind.Utc),
+                            OrganizationId = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a04"),
+                            Quantity = 20,
+                            Status = "Cancelled",
+                            Title = "Günün çorbası"
                         });
                 });
 
@@ -133,10 +208,10 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a01"),
-                            City = "Istanbul",
+                            City = "İstanbul",
                             CreatedAt = new DateTime(2026, 1, 1, 9, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "contact@greenleaf.example",
-                            Name = "Green Leaf Bakery",
+                            Email = "iletisim@yesilyaprak.example",
+                            Name = "Yeşil Yaprak Fırını",
                             Type = "Donor"
                         },
                         new
@@ -144,17 +219,44 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
                             Id = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a02"),
                             City = "Ankara",
                             CreatedAt = new DateTime(2026, 1, 1, 9, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "csr@freshmarket.example",
-                            Name = "FreshMarket Supermarket",
+                            Email = "sosyal@tazepazar.example",
+                            Name = "TazePazar Market",
+                            Type = "Donor"
+                        },
+                        new
+                        {
+                            Id = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a04"),
+                            City = "İzmir",
+                            CreatedAt = new DateTime(2026, 1, 1, 9, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "info@lezzetduragi.example",
+                            Name = "Lezzet Durağı Restoran",
                             Type = "Donor"
                         },
                         new
                         {
                             Id = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a03"),
-                            City = "Istanbul",
+                            City = "İstanbul",
                             CreatedAt = new DateTime(2026, 1, 1, 9, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "hello@hopefoodbank.example",
-                            Name = "Hope Food Bank",
+                            Email = "merhaba@umutgidabankasi.example",
+                            Name = "Umut Gıda Bankası",
+                            Type = "Recipient"
+                        },
+                        new
+                        {
+                            Id = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a05"),
+                            City = "Ankara",
+                            CreatedAt = new DateTime(2026, 1, 1, 9, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "destek@kardeslikasevi.example",
+                            Name = "Kardeşlik Aşevi",
+                            Type = "Recipient"
+                        },
+                        new
+                        {
+                            Id = new Guid("3f1b9a52-6c4d-4e8f-a1b2-0c9d8e7f6a06"),
+                            City = "İzmir",
+                            CreatedAt = new DateTime(2026, 1, 1, 9, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "bilgi@gulumsedernegi.example",
+                            Name = "Gülümse Çocuk Derneği",
                             Type = "Recipient"
                         });
                 });
@@ -167,7 +269,14 @@ namespace FoodShare.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("FoodShare.Domain.Entities.Organization", "RecipientOrganization")
+                        .WithMany()
+                        .HasForeignKey("RecipientOrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Organization");
+
+                    b.Navigation("RecipientOrganization");
                 });
 
             modelBuilder.Entity("FoodShare.Domain.Entities.Organization", b =>

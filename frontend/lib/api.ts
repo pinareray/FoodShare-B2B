@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "./config";
-import type { CreateDonationRequest, Donation } from "./types";
+import type { CreateDonationRequest, Donation, Organization } from "./types";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -15,8 +15,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export function getPendingDonations(signal?: AbortSignal) {
-  return request<Donation[]>("/api/donations/pending", { signal });
+export function getDonations(signal?: AbortSignal) {
+  return request<Donation[]>("/api/donations", { signal });
+}
+
+export function getOrganizations(signal?: AbortSignal) {
+  return request<Organization[]>("/api/organizations", { signal });
 }
 
 export function createDonation(body: CreateDonationRequest) {
@@ -24,4 +28,19 @@ export function createDonation(body: CreateDonationRequest) {
     method: "POST",
     body: JSON.stringify(body),
   });
+}
+
+export function reserveDonation(id: string, recipientOrganizationId: string) {
+  return request<Donation>(`/api/donations/${id}/reserve`, {
+    method: "POST",
+    body: JSON.stringify({ recipientOrganizationId }),
+  });
+}
+
+export function collectDonation(id: string) {
+  return request<Donation>(`/api/donations/${id}/collect`, { method: "POST" });
+}
+
+export function cancelDonation(id: string) {
+  return request<Donation>(`/api/donations/${id}/cancel`, { method: "POST" });
 }

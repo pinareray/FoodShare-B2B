@@ -24,36 +24,50 @@ public class DonationConfiguration : IEntityTypeConfiguration<Donation>
             .HasForeignKey(d => d.OrganizationId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(d => d.RecipientOrganization)
+            .WithMany()
+            .HasForeignKey(d => d.RecipientOrganizationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        var day = TimeSpan.FromDays(1);
+        var hour = TimeSpan.FromHours(1);
+
         builder.HasData(
-            new
-            {
-                Id = Guid.Parse("8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a01"),
-                Title = "Fresh sourdough bread",
-                Category = FoodCategory.Bakery,
-                Quantity = 40,
-                Status = DonationStatus.Pending,
-                OrganizationId = SeedData.GreenBakeryId,
-                CreatedAt = SeedData.CreatedAt
-            },
-            new
-            {
-                Id = Guid.Parse("8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a02"),
-                Title = "Seasonal vegetables crate",
-                Category = FoodCategory.Produce,
-                Quantity = 25,
-                Status = DonationStatus.Pending,
-                OrganizationId = SeedData.FreshMarketId,
-                CreatedAt = SeedData.CreatedAt.AddHours(1)
-            },
-            new
-            {
-                Id = Guid.Parse("8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a03"),
-                Title = "Yogurt & cheese assortment",
-                Category = FoodCategory.Dairy,
-                Quantity = 60,
-                Status = DonationStatus.Reserved,
-                OrganizationId = SeedData.FreshMarketId,
-                CreatedAt = SeedData.CreatedAt.AddHours(2)
-            });
+            Seed(1, "Taze ekşi maya ekmek", FoodCategory.Bakery, 40, SeedData.GreenBakeryId, SeedData.CreatedAt),
+            Seed(2, "Mevsim sebzeleri kasası", FoodCategory.Produce, 25, SeedData.FreshMarketId, SeedData.CreatedAt + hour),
+            Seed(3, "Yoğurt ve peynir çeşitleri", FoodCategory.Dairy, 60, SeedData.FreshMarketId, SeedData.CreatedAt + 2 * hour,
+                DonationStatus.Reserved, SeedData.HopeFoodBankId),
+            Seed(4, "Hazır öğle yemeği paketleri", FoodCategory.PreparedMeals, 30, SeedData.LezzetRestaurantId, SeedData.CreatedAt - 3 * day,
+                DonationStatus.Collected, SeedData.KardeslikSoupKitchenId),
+            Seed(5, "Paketli makarna ve pirinç", FoodCategory.Packaged, 120, SeedData.FreshMarketId, SeedData.CreatedAt - 5 * day,
+                DonationStatus.Collected, SeedData.HopeFoodBankId),
+            Seed(6, "Simit ve poğaça", FoodCategory.Bakery, 45, SeedData.GreenBakeryId, SeedData.CreatedAt - 2 * day,
+                DonationStatus.Collected, SeedData.GulumseAssociationId),
+            Seed(7, "Meyve suyu kolileri", FoodCategory.Beverages, 80, SeedData.FreshMarketId, SeedData.CreatedAt + 3 * hour),
+            Seed(8, "Günün çorbası", FoodCategory.PreparedMeals, 20, SeedData.LezzetRestaurantId, SeedData.CreatedAt - day,
+                DonationStatus.Cancelled));
     }
+
+    private static object Seed(
+        int number,
+        string title,
+        FoodCategory category,
+        int quantity,
+        Guid donorId,
+        DateTime createdAt,
+        DonationStatus status = DonationStatus.Pending,
+        Guid? recipientId = null) => new
+    {
+        Id = Guid.Parse($"8d2f6c1e-3b4a-4f5e-9a7b-1c2d3e4f5a{number:D2}"),
+        Title = title,
+        Category = category,
+        Quantity = quantity,
+        Status = status,
+        OrganizationId = donorId,
+        CreatedAt = createdAt,
+        ExpiresAt = (DateTime?)null,
+        RecipientOrganizationId = recipientId,
+        ReservedAt = recipientId is null ? (DateTime?)null : createdAt + TimeSpan.FromHours(2),
+        CollectedAt = status == DonationStatus.Collected ? createdAt + TimeSpan.FromHours(5) : (DateTime?)null
+    };
 }

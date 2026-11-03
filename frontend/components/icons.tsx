@@ -99,3 +99,93 @@ export const ChevronDownIcon = (props: IconProps) => (
     <path d="m6 9 6 6 6-6" />
   </BaseIcon>
 );
+
+export const XIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M18 6 6 18M6 6l12 12" />
+  </BaseIcon>
+);
+
+export const CheckIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M20 6 9 17l-5-5" />
+  </BaseIcon>
+);
+
+export const HandHeartIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M11 14h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16" />
+    <path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" />
+    <path d="m2 15 6 6" />
+    <path d="M19.5 8.5c.7-.7 1.5-1.6 1.5-2.7A2.73 2.73 0 0 0 16 4a2.78 2.78 0 0 0-5 1.8c0 1.2.8 2 1.5 2.8L16 12Z" />
+  </BaseIcon>
+);
+
+export const CloudIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+  </BaseIcon>
+);
+
+export const ClockIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </BaseIcon>
+);
+
+export const ScaleIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M12 3v18M7 21h10M3 7h18" />
+    <path d="m6 7-3 7a3 3 0 0 0 6 0L6 7ZM18 7l-3 7a3 3 0 0 0 6 0l-3-7Z" />
+  </BaseIcon>
+);
+
+export const BreadIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M5 11a4 4 0 0 1-1-7.5C5.5 2.5 8.5 2 12 2s6.5.5 8 1.5a4 4 0 0 1-1 7.5v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z" />
+    <path d="M9 8v3M15 8v3" />
+  </BaseIcon>
+);
+
+export const AppleIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M12 7c-1.5-1-5-1.5-6.5 1.5S5 16 7 19c1.2 1.8 3 2.5 5 1.5 2 1 3.8.3 5-1.5 2-3 2.5-7.5 1.5-10.5S13.5 6 12 7Z" />
+    <path d="M12 7c0-2 1-3.5 3-4" />
+  </BaseIcon>
+);
+
+export const MilkIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M8 2h8M9 2v3L6 9v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9l-3-4V2" />
+    <path d="M6 13h12" />
+  </BaseIcon>
+);
+
+export const BowlIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M3 11h18a9 9 0 0 1-18 0Z" />
+    <path d="M8 7c0-1.5 1-1.5 1-3M12 7c0-1.5 1-1.5 1-3M16 7c0-1.5 1-1.5 1-3" />
+  </BaseIcon>
+);
+
+export const CupIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M6 3h12l-1.5 17a2 2 0 0 1-2 1.8h-5a2 2 0 0 1-2-1.8Z" />
+    <path d="M6.5 9h11" />
+  </BaseIcon>
+);
+
+export const StoreIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M3 9 4.5 4h15L21 9" />
+    <path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0" />
+    <path d="M5 11v9h14v-9M10 20v-5h4v5" />
+  </BaseIcon>
+);
+
+export const ArrowRightIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </BaseIcon>
+);

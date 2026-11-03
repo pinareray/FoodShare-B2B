@@ -8,4 +8,5 @@ public sealed record CreateDonationCommand(
     string Title,
     FoodCategory Category,
     int Quantity,
-    Guid OrganizationId) : IRequest<DonationDto>;
+    Guid OrganizationId,
+    DateTime? ExpiresAt = null) : IRequest<DonationDto>;

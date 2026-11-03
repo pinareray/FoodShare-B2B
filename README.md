@@ -18,7 +18,7 @@ backend/
   FoodShare.sln
   src/
     FoodShare.Domain/          Entities (Donation, Organization) and enums
-    FoodShare.Application/     CQRS: CreateDonationCommand, GetPendingDonationsQuery
+    FoodShare.Application/     CQRS commands/queries for donations and organizations
     FoodShare.Infrastructure/  ApplicationDbContext, EF configurations, migrations
     FoodShare.WebAPI/          Controllers, DonationHub (SignalR), Program.cs
 frontend/
@@ -47,11 +47,18 @@ dotnet run --project src/FoodShare.WebAPI --launch-profile http
 
 The API listens on `http://localhost:5038`. In Development, pending EF Core migrations (including seed data) are applied automatically on startup.
 
-| Method | Endpoint                 | Description                         |
-| ------ | ------------------------ | ----------------------------------- |
-| GET    | `/api/donations/pending` | List pending donations              |
-| POST   | `/api/donations`         | Create a donation (broadcasts live) |
-| WS     | `/hubs/donations`        | SignalR hub, event `ReceiveNewDonation` |
+| Method | Endpoint                         | Description                                          |
+| ------ | -------------------------------- | ---------------------------------------------------- |
+| GET    | `/api/donations?status=`         | List donations, optionally filtered by status        |
+| GET    | `/api/donations/pending`         | List pending donations                               |
+| POST   | `/api/donations`                 | Create a donation (broadcasts live)                  |
+| POST   | `/api/donations/{id}/reserve`    | Reserve for a recipient `{ recipientOrganizationId }` |
+| POST   | `/api/donations/{id}/collect`    | Mark a reserved donation as collected                |
+| POST   | `/api/donations/{id}/cancel`     | Cancel a donation that is not yet collected          |
+| GET    | `/api/organizations`             | Donors and recipients with donation totals           |
+| WS     | `/hubs/donations`                | SignalR hub, events `ReceiveNewDonation`, `ReceiveDonationUpdated` |
+
+Donation lifecycle: `Pending → Reserved → Collected`, or `Cancelled` at any point before collection.
 
 ### 3. Frontend
 
@@ -62,6 +69,8 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`. Click **Sample donation** on the dashboard (or `POST /api/donations` from any client) and every open dashboard shows a toast in the top-right corner.
+Open `http://localhost:3000`. Click **Yeni Bağış** to list surplus food (or `POST /api/donations` from any client) and every open dashboard shows a toast in the top-right corner. Reserve and collect donations from **Gıda İlanları**; the impact panel on the dashboard updates live.
+
+If ports 3000/5433 are already taken, run the frontend with `npx next dev -p 3001` and override the API settings with environment variables, e.g. `ConnectionStrings__DefaultConnection=...;Port=5434;...` and `Cors__AllowedOrigins__0=http://localhost:3001`.
 
 If the API is not running, the dashboard falls back to demo data.

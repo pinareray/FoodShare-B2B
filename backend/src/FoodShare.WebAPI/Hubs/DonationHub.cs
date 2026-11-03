@@ -6,6 +6,7 @@ namespace FoodShare.WebAPI.Hubs;
 public interface IDonationClient
 {
     Task ReceiveNewDonation(DonationDto donation);
+    Task ReceiveDonationUpdated(DonationDto donation);
 }
 
 public sealed class DonationHub(ILogger<DonationHub> logger) : Hub<IDonationClient>

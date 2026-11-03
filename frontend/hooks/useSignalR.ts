@@ -56,10 +56,13 @@ export function useSignalR(hubUrl: string, handlers: HubEventHandlers): Connecti
       retryTimer = setTimeout(start, START_RETRY_DELAY_MS);
     });
 
-    start();
+    // Deferred so React Strict Mode's mount/unmount/mount cycle in development never starts
+    // (and then aborts) a negotiation, which SignalR would report as an error.
+    const startTimer = setTimeout(start, 0);
 
     return () => {
       disposed = true;
+      clearTimeout(startTimer);
       clearTimeout(retryTimer);
       if (connection.state !== HubConnectionState.Disconnected) {
         connection.stop().catch(() => undefined);

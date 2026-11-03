@@ -15,15 +15,7 @@ public sealed class GetPendingDonationsQueryHandler(IApplicationDbContext contex
             .AsNoTracking()
             .Where(d => d.Status == DonationStatus.Pending)
             .OrderByDescending(d => d.CreatedAt)
-            .Select(d => new DonationDto(
-                d.Id,
-                d.Title,
-                d.Category,
-                d.Quantity,
-                d.Status,
-                d.OrganizationId,
-                d.Organization!.Name,
-                d.CreatedAt))
+            .Select(DonationDto.Projection)
             .ToListAsync(cancellationToken);
     }
 }

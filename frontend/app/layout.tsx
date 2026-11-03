@@ -17,12 +17,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FoodShare B2B",
-  description: "Connecting businesses with surplus food to organizations that fight hunger.",
+  description: "Fazla gıdası olan işletmeleri açlıkla mücadele eden kurumlarla buluşturan platform.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="tr" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="h-full bg-gray-50 text-gray-900">
         <RealtimeProvider>
           <div className="flex h-full">

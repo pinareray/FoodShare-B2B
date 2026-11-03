@@ -4,22 +4,34 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 import toast, { Toaster } from "react-hot-toast";
 import { useSignalR, type ConnectionStatus } from "@/hooks/useSignalR";
 import { DONATION_HUB_URL } from "@/lib/config";
-import { formatCategory } from "@/lib/format";
+import { formatCategory, formatStatus } from "@/lib/format";
 import type { Donation } from "@/lib/types";
 
 interface RealtimeContextValue {
   status: ConnectionStatus;
-  /** Donations pushed by the hub during this session, newest first. */
+  /** Donations created during this session (pushed by the hub), newest first. */
   liveDonations: Donation[];
+  /** Latest known state of every donation changed during this session, by id. */
+  donationUpdates: Record<string, Donation>;
+  /** Applies a donation returned by the API immediately, without waiting for the hub. */
+  applyDonation: (donation: Donation) => void;
   unreadCount: number;
   markAllAsRead: () => void;
 }
 
 const RealtimeContext = createContext<RealtimeContextValue | null>(null);
 
+/** Toast id per donation state, so a local API result and its hub echo show a single toast. */
+export const donationToastId = (donation: Donation) => `${donation.id}:${donation.status}`;
+
 export function RealtimeProvider({ children }: { children: ReactNode }) {
   const [liveDonations, setLiveDonations] = useState<Donation[]>([]);
+  const [donationUpdates, setDonationUpdates] = useState<Record<string, Donation>>({});
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const applyDonation = useCallback((donation: Donation) => {
+    setDonationUpdates((prev) => ({ ...prev, [donation.id]: donation }));
+  }, []);
 
   const status = useSignalR(DONATION_HUB_URL, {
     ReceiveNewDonation: (donation: Donation) => {
@@ -28,13 +40,26 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
 
       toast.success(
         <div className="text-sm">
-          <p className="font-semibold text-gray-900">New donation received</p>
+          <p className="font-semibold text-gray-900">Yeni bağış geldi</p>
           <p className="text-gray-600">
-            {donation.title} · {donation.quantity} units ({formatCategory(donation.category)})
+            {donation.title} · {donation.quantity} adet ({formatCategory(donation.category)})
           </p>
-          <p className="text-xs text-gray-400">from {donation.organizationName}</p>
+          <p className="text-xs text-gray-400">{donation.organizationName}</p>
         </div>,
-        { id: donation.id },
+        { id: donationToastId(donation) },
+      );
+    },
+    ReceiveDonationUpdated: (donation: Donation) => {
+      applyDonation(donation);
+      toast(
+        <div className="text-sm">
+          <p className="font-semibold text-gray-900">Bağış durumu: {formatStatus(donation.status)}</p>
+          <p className="text-gray-600">
+            {donation.title}
+            {donation.recipientOrganizationName && ` → ${donation.recipientOrganizationName}`}
+          </p>
+        </div>,
+        { id: donationToastId(donation), icon: "🔄" },
       );
     },
   });
@@ -42,8 +67,8 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   const markAllAsRead = useCallback(() => setUnreadCount(0), []);
 
   const value = useMemo(
-    () => ({ status, liveDonations, unreadCount, markAllAsRead }),
-    [status, liveDonations, unreadCount, markAllAsRead],
+    () => ({ status, liveDonations, donationUpdates, applyDonation, unreadCount, markAllAsRead }),
+    [status, liveDonations, donationUpdates, applyDonation, unreadCount, markAllAsRead],
   );
 
   return (

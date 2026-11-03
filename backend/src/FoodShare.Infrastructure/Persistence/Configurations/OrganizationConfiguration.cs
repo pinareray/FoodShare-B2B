@@ -24,32 +24,21 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
         builder.HasData(
-            new
-            {
-                Id = SeedData.GreenBakeryId,
-                Name = "Green Leaf Bakery",
-                Type = OrganizationType.Donor,
-                Email = "contact@greenleaf.example",
-                City = "Istanbul",
-                CreatedAt = SeedData.CreatedAt
-            },
-            new
-            {
-                Id = SeedData.FreshMarketId,
-                Name = "FreshMarket Supermarket",
-                Type = OrganizationType.Donor,
-                Email = "csr@freshmarket.example",
-                City = "Ankara",
-                CreatedAt = SeedData.CreatedAt
-            },
-            new
-            {
-                Id = SeedData.HopeFoodBankId,
-                Name = "Hope Food Bank",
-                Type = OrganizationType.Recipient,
-                Email = "hello@hopefoodbank.example",
-                City = "Istanbul",
-                CreatedAt = SeedData.CreatedAt
-            });
+            Seed(SeedData.GreenBakeryId, "Yeşil Yaprak Fırını", OrganizationType.Donor, "iletisim@yesilyaprak.example", "İstanbul"),
+            Seed(SeedData.FreshMarketId, "TazePazar Market", OrganizationType.Donor, "sosyal@tazepazar.example", "Ankara"),
+            Seed(SeedData.LezzetRestaurantId, "Lezzet Durağı Restoran", OrganizationType.Donor, "info@lezzetduragi.example", "İzmir"),
+            Seed(SeedData.HopeFoodBankId, "Umut Gıda Bankası", OrganizationType.Recipient, "merhaba@umutgidabankasi.example", "İstanbul"),
+            Seed(SeedData.KardeslikSoupKitchenId, "Kardeşlik Aşevi", OrganizationType.Recipient, "destek@kardeslikasevi.example", "Ankara"),
+            Seed(SeedData.GulumseAssociationId, "Gülümse Çocuk Derneği", OrganizationType.Recipient, "bilgi@gulumsedernegi.example", "İzmir"));
     }
+
+    private static object Seed(Guid id, string name, OrganizationType type, string email, string city) => new
+    {
+        Id = id,
+        Name = name,
+        Type = type,
+        Email = email,
+        City = city,
+        CreatedAt = SeedData.CreatedAt
+    };
 }
